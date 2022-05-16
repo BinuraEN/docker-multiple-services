@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+        "express":"4.18.1",
+        "mysql2":"2.3.3",
+        "redis":"4.1.0",
+        "nodemon":"2.0.16",
+        "cors":"*"
+
+    },
+    "scripts": {
+        "start":"node index.js",
+        "dev":"nodemon"
+    }
+}
