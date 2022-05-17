@@ -4,7 +4,7 @@
         "mysql2":"2.3.3",
         "redis":"2.8.0",
         "nodemon":"2.0.16",
-        "cors":"*"
+        "cors":"2.8.5"
 
     },
     "scripts": {

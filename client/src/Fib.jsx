@@ -3,7 +3,7 @@ import axios from "axios";
 
 function Fib() {
   const [seenIndexes, setSeenIndexes] = useState([]);
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState([]);
   const [index, setIndex] = useState("");
 
   useEffect(() => {
@@ -13,7 +13,7 @@ function Fib() {
 
   const fetchValues = async () => {
     const values = await axios.get("/api/values/current");
-    setValues({ values: values.data });
+    setValues(values.data);
     console.log(values);
   };
 
@@ -24,7 +24,7 @@ function Fib() {
   };
 
   const renderSeenIndexes = () => {
-    return seenIndexes.map((e) => e.number).join(", ");
+    return seenIndexes.map(({ number }) => number).join(", ");
   };
 
   const renderValues = () => {
@@ -61,7 +61,7 @@ function Fib() {
       </form>
 
       <h3>Indexes I have seen:</h3>
-      {renderSeenIndexes}
+      {renderSeenIndexes()}
       <h3>Calculated values:</h3>
       {renderValues()}
     </div>
