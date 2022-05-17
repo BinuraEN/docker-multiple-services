@@ -1,28 +1,29 @@
 version: '3'
 services:
   mysqldb:
-    image: mysql:latest
+    image: mysql:5.7.38
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: secret
   redis:
     image: redis:latest
   api:
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - MYSQL_USER=root
-      - MYSQL_HOST=mysqldb
-      - MYSQL_DATABASE=mysql
-      - MYSQL_PASSWORD=root
-      - MYSQL_PORT=3306
     depends_on:
       - mysqldb
+      - redis
     build:
       dockerfile: Dockerfile.dev
       context: ./server
     volumes:
       - /app/node_modules
       - ./server:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MYSQL_USER=root
+      - MYSQL_HOST=mysqldb
+      - MYSQL_DATABASE=mysql
+      - MYSQL_PASSWORD=secret
+      - MYSQL_PORT=3306
   client:
     depends_on:
       - api
@@ -33,9 +34,6 @@ services:
       - /app/node_modules
       - ./client:/app
   worker:
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
     depends_on:
       - redis
     build: 
@@ -44,6 +42,9 @@ services:
     volumes:
       - /app/node_modules
       - ./worker:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
   nginx:
     depends_on:
       - api

@@ -14,15 +14,17 @@ function Fib() {
   const fetchValues = async () => {
     const values = await axios.get("/api/values/current");
     setValues({ values: values.data });
+    console.log(values);
   };
 
   const fetchIndexes = async () => {
     const values = await axios.get("/api/values/all");
-    setSeenIndexes(...values.data);
+    setSeenIndexes(values.data);
+    console.log(seenIndexes);
   };
 
   const renderSeenIndexes = () => {
-    return seenIndexes.map((number) => number).join(", ");
+    return seenIndexes.map((e) => e.number).join(", ");
   };
 
   const renderValues = () => {
@@ -59,7 +61,7 @@ function Fib() {
       </form>
 
       <h3>Indexes I have seen:</h3>
-      {renderSeenIndexes()}
+      {renderSeenIndexes}
       <h3>Calculated values:</h3>
       {renderValues()}
     </div>
