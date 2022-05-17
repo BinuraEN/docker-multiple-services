@@ -17,7 +17,6 @@ db.execute("CREATE TABLE IF NOT EXISTS numbers (number INT)")
 
 //redis setup
 const redis = require("redis");
-
 const redisClient = redis.createClient({
   host: keys.redisHost,
   port: keys.redisPort,

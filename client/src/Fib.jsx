@@ -12,17 +12,17 @@ function Fib() {
   }, []);
 
   const fetchValues = async () => {
-    const values = await axios.get("api/values/current");
+    const values = await axios.get("/api/values/current");
     setValues({ values: values.data });
   };
 
   const fetchIndexes = async () => {
-    const values = await axios.get("api/values/all");
+    const values = await axios.get("/api/values/all");
     setSeenIndexes(...values.data);
   };
 
   const renderSeenIndexes = () => {
-    return seenIndexes.map(({ number }) => number).join(", ");
+    return seenIndexes.map((number) => number).join(", ");
   };
 
   const renderValues = () => {
@@ -59,9 +59,9 @@ function Fib() {
       </form>
 
       <h3>Indexes I have seen:</h3>
-      {renderSeenIndexes}
+      {renderSeenIndexes()}
       <h3>Calculated values:</h3>
-      {renderValues}
+      {renderValues()}
     </div>
   );
 }

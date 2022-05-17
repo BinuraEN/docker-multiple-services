@@ -6,16 +6,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
   redis:
     image: redis:latest
-  server:
-    depends_on:
-      - mysqldb
-      - redis
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./server
-    volumes:
-      - /app/node_modules
-      - ./server:/app
+  api:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -24,10 +15,42 @@ services:
       - MYSQL_DATABASE=mysql
       - MYSQL_PASSWORD=root
       - MYSQL_PORT=3306
+    depends_on:
+      - mysqldb
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
   client:
+    depends_on:
+      - api
     build:
       dockerfile: Dockerfile.dev
       context: ./client
     volumes:
       - /app/node_modules
-      - ./server:/app
+      - ./client:/app
+  worker:
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    build: 
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build: 
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - "3050:80"
