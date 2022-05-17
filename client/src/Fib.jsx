@@ -61,9 +61,9 @@ function Fib() {
       </form>
 
       <h3>Indexes I have seen:</h3>
-      {renderSeenIndexes()}
+      {renderSeenIndexes}
       <h3>Calculated values:</h3>
-      {renderValues()}
+      {renderValues}
     </div>
   );
 }
