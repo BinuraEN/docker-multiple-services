@@ -3,7 +3,7 @@ import axios from "axios";
 
 function Fib() {
   const [seenIndexes, setSeenIndexes] = useState([]);
-  const [values, setValues] = useState([]);
+  const [currentValues, setCurrentValues] = useState({});
   const [index, setIndex] = useState("");
 
   useEffect(() => {
@@ -12,32 +12,28 @@ function Fib() {
   }, []);
 
   const fetchValues = async () => {
-    const values = await axios.get("/api/values/current");
-    setValues(values.data.data);
-    console.log(values);
+    const cValues = await axios.get("/api/values/current");
+    setCurrentValues(cValues.data);
   };
 
   const fetchIndexes = async () => {
-    const values = await axios.get("/api/values/all");
-    setSeenIndexes(values.data.data);
-    console.log(seenIndexes);
+    let allValues = await axios.get("/api/values/all");
+    setSeenIndexes(allValues.data);
   };
 
   const renderSeenIndexes = () => {
     return seenIndexes.map(({ number }) => number).join(", ");
   };
 
-  const renderValues = () => {
-    const entries = [];
-    for (let key in values) {
-      entries.push(
+  const renderCurrentValues = () => {
+    const currentEntries = Object.entries(currentValues).map(([key, value]) => {
+      return (
         <div key={key}>
-          For index {key} I Calculated {values[key]}
+          For index {key} I Calculated {value}
         </div>
       );
-    }
-
-    return entries;
+    });
+    return currentEntries;
   };
 
   const handleSubmit = async (e) => {
@@ -61,9 +57,9 @@ function Fib() {
       </form>
 
       <h3>Indexes I have seen:</h3>
-      {renderSeenIndexes}
+      {renderSeenIndexes()}
       <h3>Calculated values:</h3>
-      {renderValues}
+      {renderCurrentValues()}
     </div>
   );
 }
