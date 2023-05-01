@@ -1,60 +1,31 @@
-version: '3'
+version: "3"
 services:
-  mysqldb:
-    image: mysql:latest
-    environment:
-      - MYSQL_ROOT_HOST=%
-      - MYSQL_ROOT_PASSWORD=secret
-  redis:
-    image: redis:latest
-  api:
-    depends_on:
-      - mysqldb
-      - redis
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./server
-    volumes:
-      - /app/node_modules
-      - ./server:/app
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - MYSQL_USER=root
-      - MYSQL_HOST=mysqldb
-      - MYSQL_DATABASE=mysql
-      - MYSQL_PASSWORD=secret
-      - MYSQL_PORT=3306
   client:
-    depends_on:
-      - api
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    image: "binuraen/multi-client"
+    mem_limit: 128m
+    hostname: client
+  server:
+    image: "binuraen/multi-server"
+    mem_limit: 128m
+    hostname: api
     environment:
-      - WDS_SOCKET_PORT=0
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_HOST=$MYSQL_HOST
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_PORT=$MYSQL_PORT
   worker:
-    depends_on:
-      - redis
-    build: 
-      dockerfile: Dockerfile.dev
-      context: ./worker
-    volumes:
-      - /app/node_modules
-      - ./worker:/app
+    image: "binuraen/multi-worker"
+    mem_limit: 128m
+    hostname: worker
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
   nginx:
-    depends_on:
-      - api
-      - client
-    restart: always
-    build: 
-      dockerfile: Dockerfile.dev
-      context: ./nginx
+    image: "binuraen/multi-nginx"
+    mem_limit: 128m
+    hostname: nginx
     ports:
-      - "3080:80"
+      - "80:80"
