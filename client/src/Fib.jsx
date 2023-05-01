@@ -13,13 +13,13 @@ function Fib() {
 
   const fetchValues = async () => {
     const values = await axios.get("/api/values/current");
-    setValues(values.data);
+    setValues(values.data.data);
     console.log(values);
   };
 
   const fetchIndexes = async () => {
     const values = await axios.get("/api/values/all");
-    setSeenIndexes(values.data);
+    setSeenIndexes(values.data.data);
     console.log(seenIndexes);
   };
 
